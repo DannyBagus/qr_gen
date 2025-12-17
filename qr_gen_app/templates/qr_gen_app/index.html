@@ -150,7 +150,10 @@
           hx-encoding="multipart/form-data">
         
         {% csrf_token %}
-        <input type="hidden" name="scale" value="10">
+        <input type="hidden" name="box_size" value="10">
+        <input type="hidden" name="border" value="4">
+
+        <input type="hidden" name="error_correction" value="H">
 
         <div class="row g-0 g-md-4"> <div class="col-lg-7">
                 
@@ -205,11 +208,11 @@
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">QR Farbe</label>
-                                    {{ form.color }}
+                                    {{ form.foreground_color }}
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label">Hintergrund</label>
-                                    {{ form.bg_color }}
+                                    {{ form.background_color }}
                                 </div>
                             </div>
                         </div>
@@ -292,9 +295,25 @@
                     </div>
                     
                     <div class="card-footer bg-white p-3 border-top-0">
-                         <button type="submit" class="btn btn-dark btn-lg w-100 shadow-sm py-3 fw-bold" hx-disable>
-                            <i class="bi bi-download me-2"></i> QR Code Speichern
-                        </button>
+                        <div class="row g-2">
+                            <div class="col-12 col-md-6">
+                                <button type="submit" 
+                                        formaction="{% url 'generate_pdf' %}" 
+                                        formtarget="_blank"
+                                        class="btn btn-outline-dark btn-lg w-100 py-3 fw-bold" 
+                                        hx-disable>
+                                    <i class="bi bi-file-earmark-pdf me-2"></i> Als PDF
+                                </button>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <button type="submit" 
+                                        class="btn btn-dark btn-lg w-100 shadow-sm py-3 fw-bold" 
+                                        hx-disable>
+                                    <i class="bi bi-download me-2"></i> Als PNG
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,49 +1,76 @@
 {% if qr_type == 'website' %}
     <div class="mb-3">
-        <label class="form-label">Webseiten URL (https://...)</label>
-        <input type="url" name="url" class="form-control" required placeholder="https://mein-restaurant.de">
+        <label class="form-label fw-bold">Webseiten URL</label>
+        <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-link-45deg"></i></span>
+            {{ form.url }}
+        </div>
+        <div class="form-text">Z.B. https://deine-seite.ch/menu</div>
     </div>
 
 {% elif qr_type == 'wifi' %}
     <div class="mb-3">
-        <label class="form-label">WLAN Name (SSID)</label>
-        <input type="text" name="ssid" class="form-control" required>
+        <label class="form-label fw-bold">Netzwerkname (SSID)</label>
+        <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-router"></i></span>
+            {{ form.ssid }}
+        </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Passwort</label>
-        <input type="text" name="password" class="form-control" required>
+    
+    <div class="row g-2">
+        <div class="col-md-8">
+            <label class="form-label fw-bold">Passwort</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-key"></i></span>
+                {{ form.password }}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Verschlüsselung</label>
+            {{ form.security }}
+        </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Verschlüsselung</label>
-        <select name="security" class="form-select">
-            <option value="WPA">WPA/WPA2 (Standard)</option>
-            <option value="nopass">Kein Passwort</option>
-        </select>
+    <div class="alert alert-info d-flex align-items-center mt-3 p-2 small">
+        <i class="bi bi-info-circle me-2 fs-4"></i>
+        <div>Kamera öffnen und verbinden lassen. Keine App nötig.</div>
     </div>
 
 {% elif qr_type == 'vcard' %}
-    <div class="row g-2">
-        <div class="col-md-6">
-            <label class="form-label">Name</label>
-            <input type="text" name="vcard_name" class="form-control" required placeholder="Max Mustermann">
+    <div class="row g-3">
+        <div class="col-12">
+            <label class="form-label fw-bold">Vor- & Nachname</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-person"></i></span>
+                {{ form.vcard_name }}
+            </div>
         </div>
-        <div class="col-md-6">
-            <label class="form-label">Firma (Org)</label>
-            <input type="text" name="vcard_org" class="form-control" placeholder="Musterfirma GmbH">
+        <div class="col-12">
+            <label class="form-label">Organisation / Firma</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-building"></i></span>
+                {{ form.vcard_org }}
+            </div>
         </div>
-        <div class="col-md-6">
-            <label class="form-label">Telefon</label>
-            <input type="text" name="vcard_phone" class="form-control" placeholder="+49 170 ...">
-        </div>
-        <div class="col-md-6">
+        <div class="col-12">
             <label class="form-label">E-Mail</label>
-            <input type="email" name="vcard_email" class="form-control" placeholder="max@beispiel.de">
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+                {{ form.vcard_email }}
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="form-label">Telefon / Handy</label>
+            <div class="input-group">
+                <span class="input-group-text bg-white"><i class="bi bi-telephone"></i></span>
+                {{ form.vcard_phone }}
+            </div>
         </div>
     </div>
 
 {% elif qr_type == 'text' %}
     <div class="mb-3">
-        <label class="form-label">Dein Text</label>
-        <textarea name="text_content" class="form-control" rows="3" required></textarea>
+        <label class="form-label fw-bold">Dein Text</label>
+        {{ form.text_content }}
+        <div class="form-text">Emojis funktionieren auch! 🍕</div>
     </div>
 {% endif %}

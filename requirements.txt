@@ -3,3 +3,4 @@ segno
 pillow
 gunicorn
 whitenoise
+fpdf2
