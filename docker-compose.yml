@@ -21,13 +21,12 @@ services:
       
     # Umgebungsvariablen laden
     env_file:
-      - .env
+      - .env.prod
       
     environment:
       # WICHTIG: Damit Django weiß, dass es hinter Traefik und unter dieser Domain läuft
-      - DJANGO_ALLOWED_HOSTS=qr.raowy.ch,localhost,127.0.0.1
-      - DEBUG=0  # Im Produktionsmodus auf 0 setzen
-      - SECRET_KEY=${SECRET_KEY} # Sollte in der .env stehen
+      - DJANGO_ALLOWED_HOSTS=qr.raowy.ch,localhost,127.0.0.1,192.168.0.30
+      - DJANGO_SETTINGS_MODULE=qr_gen_project.settings.prod
       
     networks:
       - "daniel_default"
