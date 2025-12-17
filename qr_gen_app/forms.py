@@ -1,21 +1,23 @@
+# qr_gen_app/forms.py
 from django import forms
-from .models import QRCodeEntry
+from .models import QRCodeEntry # oder wie dein Model heisst
 
 class QRCodeForm(forms.ModelForm):
     class Meta:
         model = QRCodeEntry
-        fields = '__all__'
+        fields = ['url', 'qr_type', 'foreground_color', 'background_color', 'error_correction', 'box_size', 'border']
+        
+        # Hier stylen wir die Felder für Mobile
         widgets = {
-            'qr_type': forms.RadioSelect(attrs={
-                'class': 'btn-check', 
-                'hx-get': '/get-form-fields/', 
-                'hx-target': '#dynamic-fields',
-                'hx-swap': 'innerHTML'
+            'url': forms.TextInput(attrs={
+                'class': 'form-control form-control-lg', # <--- LG für Large
+                'placeholder': 'https://www.beispiel.ch',
+                'style': 'font-size: 1.1rem;' # Etwas grössere Schrift
             }),
-            'color': forms.TextInput(attrs={'type': 'color', 'class': 'form-control form-control-color w-100'}),
-            'bg_color': forms.TextInput(attrs={'type': 'color', 'class': 'form-control form-control-color w-100'}),
-            'bottom_text_color': forms.TextInput(attrs={'type': 'color', 'class': 'form-control form-control-color w-100'}),
-            'module_style': forms.Select(attrs={'class': 'form-select'}),
-            'frame_style': forms.RadioSelect(attrs={'class': 'btn-check'}), # Werden wir im Template custom stylen
-            'logo_preset': forms.RadioSelect(attrs={'class': 'btn-check'}),
+            'qr_type': forms.Select(attrs={
+                'class': 'form-select form-select-lg', # <--- LG für Select
+            }),
+            # Auch für die Color-Picker, falls du Textinputs nutzt:
+            'foreground_color': forms.TextInput(attrs={'type': 'color', 'class': 'form-control form-control-lg form-control-color'}),
+            'background_color': forms.TextInput(attrs={'type': 'color', 'class': 'form-control form-control-lg form-control-color'}),
         }

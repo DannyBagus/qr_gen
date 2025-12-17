@@ -3,8 +3,11 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>QR Designer Pro</title>
+    
     <link rel="icon" type="image/png" href="{% static 'qr_gen_app/assets/favicon.png' %}">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
@@ -12,48 +15,131 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        /* UI Styles */
+        /* --- MOBILE FIRST OPTIMIERUNGEN --- */
+        :root {
+            --app-bg: #f0f2f5;
+            --card-radius: 1rem;
+        }
+
+        body {
+            background-color: var(--app-bg);
+            /* Verbessert Scrolling auf Mobile */
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        /* Type Selector Styling */
         .type-selector label {
-            transition: all 0.2s;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 2px solid transparent;
             height: 100%;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            border-radius: 12px; /* Weichere Ecken */
         }
-        .btn-check:checked + label {
-            background-color: #f8f9fa; border-color: #0d6efd; color: #0d6efd;
-            transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .type-icon { font-size: 2rem; margin-bottom: 5px; }
         
-        .nav-tabs .nav-link.active { border-bottom: 3px solid #0d6efd; font-weight: bold; }
-        .visual-choice label { cursor: pointer; border: 1px solid #ddd; padding: 10px; border-radius: 8px; width: 100%; text-align: center; }
-        .btn-check:checked + label { background: #e7f1ff; border-color: #0d6efd; font-weight: bold; }
+        .btn-check:checked + label {
+            background-color: #fff;
+            border-color: #0d6efd;
+            color: #0d6efd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+        }
+        
+        /* Icons */
+        .type-icon { font-size: 1.8rem; margin-bottom: 6px; }
 
-        /* Frame Previews CSS */
+        /* Tabs Styling */
+        .nav-tabs { border-bottom: 2px solid #dee2e6; }
+        .nav-tabs .nav-link { 
+            border: none; 
+            color: #6c757d; 
+            padding: 12px 16px; /* Größere Tab-Fläche */
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active { 
+            border-bottom: 3px solid #0d6efd; 
+            color: #0d6efd; 
+            background: transparent;
+        }
+
+        /* Frame Previews */
+        .visual-choice label { 
+            cursor: pointer; 
+            border: 1px solid #dee2e6; 
+            padding: 12px; 
+            border-radius: 12px; 
+            width: 100%; 
+            text-align: center;
+            background: #fff;
+        }
+        .btn-check:checked + label { 
+            background: #e7f1ff; 
+            border-color: #0d6efd; 
+            color: #0d6efd;
+            font-weight: 600;
+        }
+
         .frame-preview-box {
-            width: 50px; height: 50px; margin: 0 auto 8px auto;
+            width: 45px; height: 45px; margin: 0 auto 8px auto;
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s; position: relative; background-color: #eee;
+            position: relative; 
         }
+        /* Frame Visuals (vereinfacht für CSS) */
         .fp-none { background: #f8f9fa; border: 1px dashed #adb5bd; }
-        .fp-simple { background: #fff; border: 3px solid #333; padding: 3px; }
+        .fp-simple { background: #fff; border: 3px solid #333; padding: 2px; }
         .fp-simple::after { content: ''; display: block; width: 100%; height: 100%; background: #ccc; opacity: 0.5; }
-        .fp-heavy { background: #fff; border: 6px solid #000; padding: 2px; }
+        .fp-heavy { background: #fff; border: 5px solid #000; padding: 1px; }
         .fp-heavy::after { content: ''; width: 100%; height: 100%; background: #ccc; }
-        .fp-polaroid {
-            background: #fff; border: 1px solid #ddd; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            padding: 4px 4px 12px 4px; align-items: flex-start;
-        }
+        .fp-polaroid { background: #fff; border: 1px solid #ddd; box-shadow: 2px 2px 4px rgba(0,0,0,0.1); padding: 3px 3px 10px 3px; }
         .fp-polaroid::after { content: ''; width: 100%; aspect-ratio: 1/1; background: #333; }
-        .fp-phone { background: #212529; border-radius: 6px; padding: 4px 2px; }
-        .fp-phone::after { content: ''; background: #fff; width: 100%; height: 100%; border-radius: 2px; }
+        .fp-phone { background: #212529; border-radius: 5px; padding: 3px 1px; }
+        .fp-phone::after { content: ''; background: #fff; width: 100%; height: 100%; border-radius: 1px; }
+
+        /* --- MOBILE SPECIFIC TWEAKS (< 768px) --- */
+        @media (max-width: 768px) {
+            /* Mache Inputs fingerfreundlich hoch */
+            input.form-control, select.form-select, .btn {
+                min-height: 56px !important; /* Standard Android Touch Target Size */
+                font-size: 16px !important;  /* Verhindert iOS Zoom */
+            }
+            
+            label {
+                font-size: 0.95rem;
+                margin-bottom: 6px;
+                color: #495057;
+            }
+
+            /* Container randlos machen für App-Feeling */
+            .mobile-edge-to-edge {
+                border-radius: 0 !important;
+                border-left: 0 !important;
+                border-right: 0 !important;
+                box-shadow: none !important;
+                border-top: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+            }
+            
+            /* Farbe Inputs breiter */
+            .form-control-color { width: 100%; }
+
+            /* Grid Abstände kleiner */
+            .row.g-2 { --bs-gutter-y: 0.5rem; }
+        }
+        
+        /* Desktop Schatten und Rundungen wiederherstellen */
+        @media (min-width: 769px) {
+            .card { border-radius: var(--card-radius); }
+        }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container py-4">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold"><i class="bi bi-qr-code-scan"></i> QR Studio</h1>
+<div class="container-fluid container-lg px-0 px-md-3 py-0 py-md-4">
+    
+    <div class="text-center py-3 py-md-4 bg-white mb-0 mb-md-4 shadow-sm d-md-block mobile-edge-to-edge">
+        <h1 class="fw-bold h4 mb-0"><i class="bi bi-qr-code-scan text-primary"></i> QR Studio</h1>
     </div>
 
     <form action="{% url 'generate_qr' %}" method="POST" enctype="multipart/form-data"
@@ -66,22 +152,22 @@
         {% csrf_token %}
         <input type="hidden" name="scale" value="10">
 
-        <div class="row">
-            <div class="col-lg-7">
+        <div class="row g-0 g-md-4"> <div class="col-lg-7">
                 
-                <div class="card shadow-sm mb-4 border-0">
-                    <div class="card-body">
+                <div class="card shadow-sm mb-3 border-0 mobile-edge-to-edge">
+                    <div class="card-body p-3 p-md-4">
+                        <label class="d-block fw-bold mb-3 text-secondary text-uppercase small ls-1">Typ wählen</label>
                         <div class="row g-2 type-selector">
                             {% for radio in form.qr_type %}
-                            <div class="col-3">
+                            <div class="col-6 col-md-3">
                                 {{ radio.tag }}
-                                <label class="btn btn-light w-100 py-3 text-secondary" for="{{ radio.id_for_label }}">
+                                <label class="btn btn-light w-100 py-3 text-secondary position-relative" for="{{ radio.id_for_label }}">
                                     {% if radio.data.value == 'website' %}<i class="bi bi-globe type-icon"></i>
                                     {% elif radio.data.value == 'wifi' %}<i class="bi bi-wifi type-icon"></i>
                                     {% elif radio.data.value == 'text' %}<i class="bi bi-card-text type-icon"></i>
                                     {% elif radio.data.value == 'vcard' %}<i class="bi bi-person-vcard type-icon"></i>
                                     {% endif %}
-                                    <div class="small">{{ radio.choice_label }}</div>
+                                    <div class="small fw-medium">{{ radio.choice_label }}</div>
                                 </label>
                             </div>
                             {% endfor %}
@@ -89,30 +175,32 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm mb-4 border-0">
-                    <div class="card-body bg-white">
-                        <h5 class="card-title mb-3"><i class="bi bi-pencil-square"></i> Inhalt</h5>
+                <div class="card shadow-sm mb-3 border-0 mobile-edge-to-edge">
+                    <div class="card-body p-3 p-md-4 bg-white">
+                        <h5 class="card-title mb-3 d-flex align-items-center">
+                            <i class="bi bi-pencil-square me-2 text-primary"></i> Inhalt
+                        </h5>
                         <div id="dynamic-fields">
                             {% include 'partials/form_fields.html' with qr_type='website' %}
                         </div>
                     </div>
                 </div>
 
-                <div class="card shadow border-0">
-                    <div class="card-header bg-white border-bottom-0 pt-3">
-                        <ul class="nav nav-tabs card-header-tabs" id="designTabs" role="tablist">
-                            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-style" type="button">Gestalten</button></li>
-                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-frames" type="button">Frames</button></li>
+                <div class="card shadow-sm border-0 mobile-edge-to-edge mb-4 mb-md-0">
+                    <div class="card-header bg-white border-bottom pt-2 px-0 px-md-3">
+                        <ul class="nav nav-tabs card-header-tabs justify-content-center justify-content-md-start" id="designTabs" role="tablist">
+                            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-style" type="button">Design</button></li>
+                            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-frames" type="button">Rahmen</button></li>
                             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-logo" type="button">Logo</button></li>
                             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-text" type="button">Text</button></li>
                         </ul>
                     </div>
-                    <div class="card-body tab-content p-4">
+                    <div class="card-body tab-content p-3 p-md-4">
                         
                         <div class="tab-pane fade show active" id="tab-style">
                             <div class="row g-3">
-                                <div class="col-md-12">
-                                    <label class="form-label fw-bold">Punkt-Muster</label>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Muster-Stil</label>
                                     {{ form.module_style }}
                                 </div>
                                 <div class="col-6">
@@ -129,9 +217,9 @@
                         <div class="tab-pane fade" id="tab-frames">
                             <div class="row g-2 visual-choice">
                                 {% for radio in form.frame_style %}
-                                <div class="col-4">
+                                <div class="col-4 col-md-4">
                                     {{ radio.tag }}
-                                    <label for="{{ radio.id_for_label }}" class="py-3">
+                                    <label for="{{ radio.id_for_label }}" class="h-100 d-flex flex-column justify-content-center">
                                         {% if radio.data.value == 'none' %}<div class="frame-preview-box fp-none"></div>
                                         {% elif radio.data.value == 'simple' %}<div class="frame-preview-box fp-simple"></div>
                                         {% elif radio.data.value == 'heavy' %}<div class="frame-preview-box fp-heavy"></div>
@@ -154,11 +242,11 @@
                                     {{ radio.tag }}
                                     <label for="{{ radio.id_for_label }}" class="py-2 d-flex flex-column align-items-center justify-content-center h-100">
                                         {% if radio.data.value == 'none' %}
-                                            <i class="bi bi-slash-circle fs-2 text-muted mb-1"></i>
+                                            <i class="bi bi-slash-circle fs-3 text-muted mb-1"></i>
                                         {% else %}
                                             <img src="{% static 'qr_gen_app/assets/' %}{{ radio.data.value }}.png" 
                                                  alt="{{ radio.choice_label }}"
-                                                 style="width: 32px; height: 32px; object-fit: contain;"
+                                                 style="width: 28px; height: 28px; object-fit: contain;"
                                                  class="mb-1"
                                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                                             <i class="bi bi-image fs-4 text-secondary mb-1" style="display:none;"></i>
@@ -168,8 +256,8 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            <label class="fw-bold">Oder Upload</label>
-                            <input type="file" name="logo" class="form-control" accept="image/*">
+                            <label class="fw-bold mt-2">Oder eigener Upload</label>
+                            <input type="file" name="logo" class="form-control mt-1" accept="image/*">
                         </div>
 
                         <div class="tab-pane fade" id="tab-text">
@@ -186,8 +274,8 @@
                                             <option value="{{ value }}">{{ label }}</option>
                                         {% endfor %}
                                     </select>
-                                    <div class="form-text x-small">
-                                        <i class="bi bi-exclamation-circle"></i> Wenn die Datei (z.B. arial.ttf) fehlt, ändert sich die Größe nicht!
+                                    <div class="form-text x-small text-muted mt-1">
+                                        <i class="bi bi-info-circle"></i> Benötigt .ttf Dateien im Assets Ordner.
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -201,44 +289,58 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     
                     <div class="card-footer bg-white p-3 border-top-0">
-                         <button type="submit" class="btn btn-dark btn-lg w-100 shadow-sm" hx-disable>
-                            <i class="bi bi-download me-2"></i> QR Code herunterladen
+                         <button type="submit" class="btn btn-dark btn-lg w-100 shadow-sm py-3 fw-bold" hx-disable>
+                            <i class="bi bi-download me-2"></i> QR Code Speichern
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-5">
-                <div class="sticky-top" style="top: 20px;">
-                    <div class="card border-0 shadow-lg text-center overflow-hidden">
+            <div class="col-lg-5 mt-4 mt-lg-0 px-3 px-lg-0">
+                <div class="sticky-top" style="top: 20px; z-index: 100;">
+                    <div class="card border-0 shadow text-center overflow-hidden rounded-4">
                         <div class="card-header bg-dark text-white py-3">
-                            <h6 class="mb-0">Live Vorschau</h6>
+                            <h6 class="mb-0 fw-bold"><i class="bi bi-eye me-2"></i>Live Vorschau</h6>
                         </div>
-                        <div class="card-body d-flex align-items-center justify-content-center p-0" style="min-height: 450px; background: #e9ecef;">
-                            <div id="preview-container" class="p-4">
+                        <div class="card-body d-flex align-items-center justify-content-center p-0 bg-light" style="min-height: 400px;">
+                            <div id="preview-container" class="p-4 w-100">
                                 <div class="text-muted opacity-50">
-                                    <i class="bi bi-qr-code fs-1"></i><br>
-                                    Warte auf Eingabe...
+                                    <div class="spinner-border text-secondary mb-3" role="status" id="loading-spinner" style="display:none;"></div>
+                                    <div id="placeholder-icon">
+                                        <i class="bi bi-qr-code fs-1 d-block mb-2"></i>
+                                        <small>Tippe etwas ein...</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="text-center text-muted small mt-2 d-lg-none">
+                        Vorschau aktualisiert sich automatisch
                     </div>
                 </div>
             </div>
         </div>
     </form>
+    
+    <div style="height: 50px;" class="d-md-none"></div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- 1. Mobile Helper: Inputs vergrößern ohne forms.py zu ändern ---
+        const allInputs = document.querySelectorAll('input.form-control, select.form-select');
+        allInputs.forEach(el => {
+            el.classList.add('form-control-lg', 'form-select-lg');
+        });
+
+        // --- 2. Logo Logic ---
         const fileInput = document.querySelector('input[name="logo"]');
         const presetRadios = document.querySelectorAll('input[name="logo_preset"]');
 
-        // Logic: Klick auf Preset löscht File Upload
         presetRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.value !== 'none') {
@@ -247,11 +349,22 @@
             });
         });
 
-        // Logic: File Upload setzt Preset auf "None"
         fileInput.addEventListener('change', function() {
             if (this.value) {
                 const noneRadio = document.querySelector('input[name="logo_preset"][value="none"]');
                 if (noneRadio) noneRadio.checked = true;
+            }
+        });
+
+        // --- 3. Loading Indicator für HTMX ---
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            if(evt.detail.target.id === 'preview-container') {
+                document.getElementById('preview-container').style.opacity = '0.5';
+            }
+        });
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+             if(evt.detail.target.id === 'preview-container') {
+                document.getElementById('preview-container').style.opacity = '1';
             }
         });
     });
