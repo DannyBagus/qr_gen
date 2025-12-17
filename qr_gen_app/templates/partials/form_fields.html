@@ -1,0 +1,49 @@
+{% if qr_type == 'website' %}
+    <div class="mb-3">
+        <label class="form-label">Webseiten URL (https://...)</label>
+        <input type="url" name="url" class="form-control" required placeholder="https://mein-restaurant.de">
+    </div>
+
+{% elif qr_type == 'wifi' %}
+    <div class="mb-3">
+        <label class="form-label">WLAN Name (SSID)</label>
+        <input type="text" name="ssid" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Passwort</label>
+        <input type="text" name="password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Verschlüsselung</label>
+        <select name="security" class="form-select">
+            <option value="WPA">WPA/WPA2 (Standard)</option>
+            <option value="nopass">Kein Passwort</option>
+        </select>
+    </div>
+
+{% elif qr_type == 'vcard' %}
+    <div class="row g-2">
+        <div class="col-md-6">
+            <label class="form-label">Name</label>
+            <input type="text" name="vcard_name" class="form-control" required placeholder="Max Mustermann">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Firma (Org)</label>
+            <input type="text" name="vcard_org" class="form-control" placeholder="Musterfirma GmbH">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Telefon</label>
+            <input type="text" name="vcard_phone" class="form-control" placeholder="+49 170 ...">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">E-Mail</label>
+            <input type="email" name="vcard_email" class="form-control" placeholder="max@beispiel.de">
+        </div>
+    </div>
+
+{% elif qr_type == 'text' %}
+    <div class="mb-3">
+        <label class="form-label">Dein Text</label>
+        <textarea name="text_content" class="form-control" rows="3" required></textarea>
+    </div>
+{% endif %}

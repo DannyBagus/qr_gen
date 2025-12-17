@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: qr_gen_web
+    restart: always
+    command: /app/entrypoint.sh
+    
+    # Volumes:
+    # 1. Wir mappen das aktuelle Verzeichnis, damit db.sqlite3 persistent bleibt
+    # 2. Media ist wichtig für hochgeladene Logos
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles  # Zielordner von collectstatic (siehe settings.py STATIC_ROOT)
+      - media_volume:/app/media
+      
+    # Port für lokalen Direktzugriff (optional, z.B. http://localhost:8009)
+    ports:
+      - "8009:8000"
+      
+    # Umgebungsvariablen laden
+    env_file:
+      - .env
+      
+    environment:
+      # WICHTIG: Damit Django weiß, dass es hinter Traefik und unter dieser Domain läuft
+      - DJANGO_ALLOWED_HOSTS=qr.raowy.ch,localhost,127.0.0.1
+      - DEBUG=0  # Im Produktionsmodus auf 0 setzen
+      - SECRET_KEY=${SECRET_KEY} # Sollte in der .env stehen
+      
+    networks:
+      - "daniel_default"
+      
+    labels:
+      traefik.enable: "true"
+
+      # Router Konfiguration (Name: qr-gen)
+      traefik.http.routers.qr-gen.entrypoints: "websecure"
+      # traefik.http.routers.qr-gen.middlewares: "authelia@docker" # Optional: Auth davor schalten
+      
+      # WICHTIG: Hier die gewünschte Subdomain anpassen
+      traefik.http.routers.qr-gen.rule: "Host(`qr.raowy.ch`)"
+
+      # TLS / SSL (Wildcard Strategie via Cloudflare Resolver)
+      traefik.http.routers.qr-gen.tls: "true"
+      traefik.http.routers.qr-gen.tls.certresolver: "cfresolver"
+
+      # Domains für das Zertifikat (übernimmt er meist vom Resolver, aber sicher ist sicher)
+      traefik.http.routers.qr-gen.tls.domains[0].main: "raowy.ch"
+      traefik.http.routers.qr-gen.tls.domains[0].sans: "*.raowy.ch"
+
+      # Service Port (Interner Port des Containers)
+      traefik.http.services.qr-gen.loadbalancer.server.port: "8000"
+      traefik.http.services.qr-gen.loadbalancer.server.scheme: "http"
+
+volumes:
+  static_volume:
+  media_volume:
+
+networks:
+  daniel_default:
+    external: true
+    name: "daniel_default"

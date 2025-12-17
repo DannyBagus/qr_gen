@@ -1,0 +1,5 @@
+django
+segno
+pillow
+gunicorn
+whitenoise

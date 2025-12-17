@@ -1,0 +1,32 @@
+# Python Allgemein
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Virtuelle Umgebung (wichtig!)
+venv/
+env/
+.venv/
+
+# Umgebungsvariablen / Geheimnisse (SEHR WICHTIG!)
+.env
+.env.*
+
+# Statische Dateien & Uploads
+# Wir wollen 'assets' im git haben, aber nicht die gesammelten 'staticfiles'
+staticfiles/
+# User Uploads (generierte QRs oder hochgeladene Logos) nicht ins Git
+media/
+qr_gen_app/static/qr_gen_app/assets/qr_codes/
+
+# IDE Settings (VS Code, PyCharm etc.)
+.idea/
+.vscode/
+*.swp
+.DS_Store

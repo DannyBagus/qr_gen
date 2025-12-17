@@ -1,0 +1,25 @@
+# Git Dateien
+.git
+.gitignore
+
+# Python Cache & venv
+__pycache__
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# IDE Settings
+.idea
+.vscode
+.DS_Store
+
+# Lokale Entwicklungshilfen (müssen nicht ins Image)
+README.md
+docker-compose.yaml
+
+# Die Datenbank wird lokal gemountet, nicht reinkopiert
+db.sqlite3
+
+# Statische Sammlungen (werden im Entrypoint neu erstellt)
+staticfiles/
